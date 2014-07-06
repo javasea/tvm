@@ -13,6 +13,6 @@ public class TVMIndex {
 		System.out.println("git is ok");
 		
 		System.out.println("git is ok");
-		System.out.println("git is ok");
+	
 	}
 }
