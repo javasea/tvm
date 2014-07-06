@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+  xsi:schemaLocation="
+                    http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                    http://www.springframework.org/schema/mvc
+                    http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+                    http://www.springframework.org/schema/tx
+                    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+                    http://www.springframework.org/schema/aop
+                    http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                    http://www.springframework.org/schema/context
+                    http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                    http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+                    http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
+<!--   <import resource="classpath:com/tianji/resume/dao/dao.xml" /> -->
+<!--   <import resource="classpath:com/tianji/www/resume/services.xml" /> -->
+
+  <bean id="propertyConfigurer"
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+    p:location="/WEB-INF/configuration.properties" p:fileEncoding="UTF-8" />
+  <util:properties id="config" location="/WEB-INF/configuration.properties" />
+  <import resource="classpath:env-3.1.xml" />
+
+  <bean id="messageSource"
+    class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames">
+      <list>
+        <value>messages</value>
+        <value>validator</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="master" class="com.tianji.www.web.spring.util.ConcurrencyMaster"
+    destroy-method="destroy">
+    <constructor-arg index="0" value="128" />
+  </bean>
+
+  <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+
+  <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper" />
+
+  <bean id="multipartResolver"
+    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxInMemorySize" value="5120" />
+    <property name="maxUploadSize" value="15360000" />
+  </bean>
+
+  <bean id="transactionManager"
+    class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+    p:dataSource-ref="dataSource" />
+  <tx:annotation-driven transaction-manager="transactionManager" />
+
+<!--   <bean id="operators" class="com.tianji.www.service.resume.vo.Operators"> -->
+<!--     <property name="userIds"> -->
+<!--       <list> -->
+<!--         <value>43098226</value> -->
+<!--         <value>39172633</value> -->
+<!--         <value>42723200</value> -->
+<!--         <value>42723605</value> -->
+<!--         <value>42723903</value> -->
+<!--         <value>42724303</value> -->
+<!--         <value>42610276</value> -->
+<!--         <value>35066561</value> -->
+<!--         <value>28723003</value> -->
+<!--         <value>29485624</value> -->
+<!--         <value>32290469</value> -->
+<!--         <value>29084920</value> -->
+<!--         <value>15876526</value> -->
+<!--         <value>28746673</value> -->
+<!--         <value>65498</value> -->
+<!--         <value>36013196</value> -->
+<!--         <value>30557825</value> -->
+<!--         <value>32391420</value> -->
+<!--       </list> -->
+<!--     </property> -->
+<!--   </bean> -->
+
+
+  <bean id="velocityEngine"
+    class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <property name="velocityProperties">
+      <props>
+        <prop key="resource.loader">class</prop>
+        <prop key="class.resource.loader.class">
+          org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+        </prop>
+        <prop key="class.resource.loader.resourceLoaderPath">classpath:</prop>
+        <prop key="userdirective">
+          com.googlecode.htmlcompressor.velocity.HtmlCompressorDirective,
+          com.googlecode.htmlcompressor.velocity.XmlCompressorDirective,
+          com.googlecode.htmlcompressor.velocity.JavaScriptCompressorDirective,
+          com.googlecode.htmlcompressor.velocity.CssCompressorDirective
+        </prop>
+      </props>
+    </property>
+  </bean>
+
+  <import resource="security.xml" />
+  <import resource="corntask.xml" />
+</beans>
