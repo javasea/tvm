@@ -11,5 +11,8 @@ public class TVMIndex {
 		TVMIndex index=new TVMIndex();
 		index.sendText();
 		System.out.println("git is ok");
+		
+		System.out.println("git is ok");
+		System.out.println("git is ok");
 	}
 }
